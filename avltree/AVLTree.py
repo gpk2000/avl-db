@@ -8,28 +8,56 @@ class AVLTree(object):
         super().__init__()
         self.root = None
 
-    def _height(self, root):
+    def _height(self, root) -> int:
+        """Height of the AVL tree
+
+        Args:
+            root (AVLNode): root of the tree
+
+        Returns:
+            int: resulting height
+        """
         if not root:
             return 0
 
         return root.height
 
-    def get_height(self):
+    def get_height(self) -> int:
         return self._height(self.root)
 
-    def _balance_factor(self, root):
+    def _balance_factor(self, root) -> int:
+        """Calculates the balance factor of the AVL Tree
+
+        Args:
+            root (AVLNode): the root of the tree
+
+        Returns:
+            int: resulting balance factor
+        """
         if not root:
             return 0
 
         return self._height(root.left) - self._height(root.right)
 
-    def get_balance_factor(self):
+    def get_balance_factor(self) -> int:
         return self._balance_factor(self.root)
 
-    def get_all_data(self):
+    def get_all_data(self) -> list:
+        """Gets all the data present in the AVL tree and stores
+        it in a list. The data is ordered ascending according to
+        the key
+
+        Returns:
+            list: resulting data
+        """
         out = []
 
-        def recurse(root):
+        def recurse(root) -> None:
+            """standard inorder traversal of binary tree
+
+            Args:
+                root (AVLNode): the root of the tree
+            """
             nonlocal out
             if not root:
                 return
@@ -43,7 +71,18 @@ class AVLTree(object):
         recurse(self.root)
         return out
 
-    def _insert(self, root, key, value):
+    def _insert(self, root, key, value) -> AVLNode:
+        """Inserts the (key, value) pair in the AVL Tree and 
+        self balances itself.
+
+        Args:
+            root (AVLNode): the root of the tree
+            key (str): the key to be inserted
+            value (str): the value to be mapped for key
+
+        Returns:
+            AVLNode: resulting root after self balancing itself
+        """
         if not root:
             return AVLNode(key, value)
 
@@ -73,7 +112,18 @@ class AVLTree(object):
 
         return root
 
-    def _left_rotate(self, root):
+    def insert_data(self, key, value) -> None:
+        self.root = self._insert(self.root, key, value)
+
+    def _left_rotate(self, root) -> AVLNode:
+        """Left rotation of the tree
+
+        Args:
+            root (AVLNode): the node from which rotation should be done
+
+        Returns:
+            AVLNode: new root after rotation
+        """
         rright = root.right
         rrleft = rright.left
 
@@ -87,7 +137,15 @@ class AVLTree(object):
 
         return rright
 
-    def _right_rotate(self, root):
+    def _right_rotate(self, root) -> AVLNode:
+        """right rotation of tree
+
+        Args:
+            root (AVLNode): the node from which rotation should be done
+
+        Returns:
+            AVLNode: new root after rotation
+        """
         rleft = root.left
         rrright = rleft.right
 
@@ -100,6 +158,3 @@ class AVLTree(object):
                                self._height(rleft.right))
 
         return rleft
-
-    def insert_data(self, key, value):
-        self.root = self._insert(self.root, key, value)

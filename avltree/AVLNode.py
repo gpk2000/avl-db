@@ -32,8 +32,18 @@ class AVLNode(object):
             return out
         raise NoNodeData
 
-    def get_key(self):
+    def get_key(self) -> str:
+        """returns the key of the node
+
+        Returns:
+            str: the key in (key, value) pair
+        """
         return self.key
 
-    def get_value(self):
+    def get_value(self) -> str:
+        """returns the value of the key
+
+        Returns:
+            str: the value in (key, value) pair
+        """
         return self.value
