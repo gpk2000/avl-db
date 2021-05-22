@@ -1,6 +1,8 @@
 from unittest.signals import removeResult
 from AVLNode import AVLNode
 
+class KeyNotFoundError(Exception): pass
+
 
 class AVLTree(object):
 
@@ -98,7 +100,7 @@ class AVLTree(object):
         root.height = 1 + max(self._height(root.left),
                               self._height(root.right))
 
-        balance = self.get_balance_factor()
+        balance = self._balance_factor(root)
         if balance > 1 and key < root.left.get_key():
             root = self._right_rotate(root)
         elif balance < -1 and key > root.right.get_key():
@@ -106,7 +108,7 @@ class AVLTree(object):
         elif balance > 1 and key > root.left.get_key():
             root.left = self._left_rotate(root.left)
             root = self._right_rotate(root)
-        elif balance < 1 and key < root.right.get_key():
+        elif balance < -1 and key < root.right.get_key():
             root.right = self._right_rotate(root.right)
             root = self._left_rotate(root)
 
@@ -158,3 +160,110 @@ class AVLTree(object):
                                self._height(rleft.right))
 
         return rleft
+
+    def _delete(self, root, key):
+        if not root:
+            return root
+        rkey = root.get_key()
+        if key < rkey:
+            root.left = self._delete(root.left, key)
+        elif key > rkey:
+            root.right = self._delete(root.right, key)
+        else:
+            if root.left is None:
+                temp = root.right
+                root = None
+                return temp
+            elif root.right is None:
+                temp = root.left
+                root = None
+                return temp
+            temp = self._get_min_value_node(root.right)
+            root.key = temp.key
+            root.value = temp.value
+            root.right = self._delete(root.right, temp.key)
+
+        if root is None:
+            return root
+
+        root.height = 1 + max(self._height(root.left),
+                              self._height(root.right))
+        balance = self._balance_factor(root)
+
+        if balance > 1 and self._balance_factor(root.left) >= 0:
+            root = self._right_rotate(root)
+        elif balance < -1 and self._balance_factor(root.right) <= 0:
+            root = self._left_rotate(root)
+        elif balance > 1 and self._balance_factor(root.left) < 0:
+            root.left = self._left_rotate(root.left)
+            root = self._right_rotate(root)
+        elif balance < -1 and self._balance_factor(root.right) > 0:
+            root.right = self._right_rotate(root.right)
+            root = self._left_rotate(root)
+
+        return root
+    
+    def _get_min_value_node(self, root):
+        if not root and not root.left:
+            return root
+        return self._get_min_value_node(self, root.left)
+
+    def delete_data(self, key):
+        self.root = self._delete(self.root, key)
+
+    def get_value(self, key):
+        if not self.root:
+            raise KeyNotFoundError
+        else:
+            return self._get(self.root, key)
+    
+    def _get(self, root, key):
+        if not root:
+            return
+        if root.key == key:
+            return root.val
+        
+        val = self._get(root.left, key)
+        if val: return val
+        val = self._get(root.right, key)
+        if val: return val
+
+        raise KeyNotFoundError
+    
+    def is_empty(self):
+        return not self.root
+    
+    def find_min(self):
+        return self._find_min(self.root)
+
+    def _find_min(self, root):
+        while root.left:
+            root = root.left
+        return root
+    
+    def find_max(self):
+        return self._find_max(self.root)
+    
+    def _find_max(self, root):
+        while root.right:
+            root = root.right
+        return root
+    
+    def check_ordering(self):
+        return self._check_ordering(self.root)
+    
+
+    def check_balanced(self):
+        return self._check_balanced(self.root)
+    
+    def _check_balanced(self, root):
+        if not root:
+            return True
+        
+        lheight = self._height(root.left)
+        rheight = self._height(root.right)
+
+        lcheck = self._check_balanced(root.left)
+        rcheck = self._check_balanced(root.right)
+        currcheck = abs(lheight - rheight) < 2
+        return lcheck and rcheck and currcheck
