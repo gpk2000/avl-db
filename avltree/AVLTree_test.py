@@ -1,7 +1,7 @@
-from AVLTree import KeyNotFoundError
+from avltree.AVLTree import KeyNotFoundError
 import unittest
-from AVLTree import AVLTree
-from AVLNode import AVLNode
+from avltree.AVLTree import AVLTree
+from avltree.AVLNode import AVLNode
 
 
 class TestAVLTree(unittest.TestCase):

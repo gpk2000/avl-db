@@ -1,5 +1,4 @@
-from unittest.signals import removeResult
-from AVLNode import AVLNode
+from avltree.AVLNode import AVLNode
 
 class KeyNotFoundError(Exception): pass
 
@@ -221,7 +220,7 @@ class AVLTree(object):
         if not root:
             return
         if root.key == key:
-            return root.val
+            return root.value
         
         val = self._get(root.left, key)
         if val: return val
