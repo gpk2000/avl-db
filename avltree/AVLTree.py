@@ -213,21 +213,18 @@ class AVLTree(object):
     def get_value(self, key):
         if not self.root:
             raise KeyNotFoundError
-        else:
-            return self._get(self.root, key)
+        val = self._get(self.root, key)
+        if val: return val
+        raise KeyNotFoundError
     
     def _get(self, root, key):
-        if not root:
-            return
         if root.key == key:
             return root.value
         
-        val = self._get(root.left, key)
-        if val: return val
-        val = self._get(root.right, key)
-        if val: return val
-
-        raise KeyNotFoundError
+        elif root.right and root.key < key:
+            return self._get(root.right, key)
+        elif root.left and root.key > key:
+            return self._get(root.left, key)
     
     def is_empty(self):
         return not self.root
