@@ -7,6 +7,7 @@ This is an implementation of _in memory_ database which uses AVL-Tree as its bac
 ## Why AVL-Tree?
 
 **Property**: AVL Tree is a self balancing binary search tree (BBST)
+
 **Property**: The difference between the heights of left and right subtree is almost 1, aka balancing factor of a node. 
 
 It means that whenever the tree goes out of balance we perform rotations and make it balanced. All these rotations take constant amount of time, so there is no degradation in performance.
