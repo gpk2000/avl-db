@@ -1,6 +1,8 @@
 from avltree.AVLNode import AVLNode
 
-class KeyNotFoundError(Exception): pass
+
+class KeyNotFoundError(Exception):
+    pass
 
 
 class AVLTree(object):
@@ -160,7 +162,16 @@ class AVLTree(object):
 
         return rleft
 
-    def _delete(self, root, key):
+    def _delete(self, root, key) -> AVLNode:
+        """deletes a key from the tree
+
+        Args:
+            root (AVLNode): the root of the tree
+            key (str): the key to be deleted
+
+        Returns:
+            AVLNode: modifed root of the tree
+        """
         if not root:
             return root
         rkey = root.get_key()
@@ -201,8 +212,16 @@ class AVLTree(object):
             root = self._left_rotate(root)
 
         return root
-    
+
     def _get_min_value_node(self, root):
+        """returns the minimum data point in the database(wrt key)
+
+        Args:
+            root (AVLNode): the root of the tree
+
+        Returns:
+            AVLNode: the minimum node in the tree
+        """
         if not root and not root.left:
             return root
         return self._get_min_value_node(self, root.left)
@@ -211,51 +230,90 @@ class AVLTree(object):
         self.root = self._delete(self.root, key)
 
     def get_value(self, key):
+        """searches for the key in the database and returns it value
+
+        Args:
+            key (str): the key to be searched
+
+        Raises:
+            KeyNotFoundError: If key is not found
+
+        Returns:
+            str: the value corresponding to the key
+        """
         if not self.root:
             raise KeyNotFoundError
         val = self._get(self.root, key)
-        if val: return val
+        if val:
+            return val
         raise KeyNotFoundError
-    
+
     def _get(self, root, key):
         if root.key == key:
             return root.value
-        
+
         elif root.right and root.key < key:
             return self._get(root.right, key)
         elif root.left and root.key > key:
             return self._get(root.left, key)
-    
+
     def is_empty(self):
+        """checks if the tree is empty
+
+        Returns:
+            bool
+        """
         return not self.root
-    
+
     def find_min(self):
+        """returns the minimum data point in the tree
+
+        Returns:
+            AVLNode
+        """
         return self._find_min(self.root)
 
     def _find_min(self, root):
         while root.left:
             root = root.left
         return root
-    
+
     def find_max(self):
+        """finds the maximum data point in the tree
+
+        Returns:
+            AVLNode
+        """
         return self._find_max(self.root)
-    
+
     def _find_max(self, root):
         while root.right:
             root = root.right
         return root
-    
+
     def check_ordering(self):
+        """checks if inorder traversal results in sorted sequence
+
+        Returns:
+            bool
+        """
         return self._check_ordering(self.root)
-    
 
     def check_balanced(self):
         return self._check_balanced(self.root)
-    
+
     def _check_balanced(self, root):
+        """checks if the tree is balanced
+
+        Args:
+            root (AVLNode): the root of the tree
+
+        Returns:
+            bool
+        """
         if not root:
             return True
-        
+
         lheight = self._height(root.left)
         rheight = self._height(root.right)
 
